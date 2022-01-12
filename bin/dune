@@ -1,0 +1,4 @@
+(executable
+ (public_name pallvm)
+ (name main)
+ (libraries pallvm))
