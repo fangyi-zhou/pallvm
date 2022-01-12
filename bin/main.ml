@@ -1,3 +1,5 @@
 let () =
   let filename = Sys.argv.(1) in
-  Pallvm.parse filename
+  match Pallvm.parse filename with
+  | Some program -> Pallvm.generate_code program
+  | None -> ()
