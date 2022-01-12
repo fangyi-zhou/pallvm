@@ -20,6 +20,10 @@ rule token = parse
   (* identifier *)
   | ident { IDENT (lexeme lexbuf)}
   (* TODO: allow escape sequence *)
-  | '\'' [^'\'']* '\'' { STRING (lexeme lexbuf) }
+  | '\'' [^'\'']* '\''
+  {
+    let literal = lexeme lexbuf in
+    STRING (String.sub literal 1 (String.length literal - 2))
+  }
   | eof { EOI }
   | _ { failwith (lexeme lexbuf) }
