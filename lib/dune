@@ -1,2 +1,8 @@
 (library
  (name pallvm))
+
+(menhir
+ (modules parser))
+
+(ocamllex
+ (modules lexer))
