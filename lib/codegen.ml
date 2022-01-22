@@ -24,17 +24,20 @@ let create_string_literal env llmodule literal =
 
 let generate_main ({llctx; _} as env) ({llmodule; _} as module_) statements =
   let i64_t = i64_type llctx in
-  match statements with
-  | [FunctionCall ("writeln", [StringLiteral s])] ->
-      let s_global = create_string_literal env llmodule s in
-      let llbuilder = builder_before llctx module_.ret in
-      let _ =
-        build_call module_.puts_func
-          [|const_gep s_global [|const_int i64_t 0; const_int i64_t 0|]|]
-          "ret" llbuilder
-      in
-      ()
-  | _ -> failwith "Unimplemented"
+  let generate_statement statement =
+    match statement with
+    | FunctionCall ("writeln", [StringLiteral s]) ->
+        let s_global = create_string_literal env llmodule s in
+        let llbuilder = builder_before llctx module_.ret in
+        let _ =
+          build_call module_.puts_func
+            [|const_gep s_global [|const_int i64_t 0; const_int i64_t 0|]|]
+            "ret" llbuilder
+        in
+        ()
+    | _ -> failwith "Unimplemented"
+  in
+  List.iter generate_statement statements
 
 let initialise_module {llctx; _} name =
   let llmodule = create_module llctx name in
